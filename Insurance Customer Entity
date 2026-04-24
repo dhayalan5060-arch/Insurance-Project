@@ -34,7 +34,7 @@ public class Customer {
     @Column(unique = true)
     private String username;
 
-    @JsonIgnore  // 🔐 hides password in response
+    @JsonIgnore  // 🔐 hides password in response  --> Since, we used @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 }
 
