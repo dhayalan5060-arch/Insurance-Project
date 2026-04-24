@@ -1,0 +1,44 @@
+package com.insurance.customer.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "customers")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Customer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String firstName;
+
+    private String lastName;
+
+    @Column(unique = true)
+    private String mobileNumber;
+
+    private LocalDate dob;
+
+    @Column(unique = true)
+    private String email;
+
+    @Column(unique = true)
+    private String username;
+
+    @JsonIgnore  // 🔐 hides password in response
+    private String password;
+}
+
+@JasonIgnre --> It is part of Jackson library in Java. Its purpose is to mark specific field getter or setter, prevents from Serialization(Object to Jason) and Deserialization( Jason to Object)
+
+*In our case, In controller we have returned user object. User object contains Password fields too.
+* If we return the User object Password might get exposed in front end. to prevent this we use @JasonIgnore.
