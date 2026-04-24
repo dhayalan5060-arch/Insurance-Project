@@ -1,0 +1,37 @@
+package com.insurance.customer.dto;
+
+import lombok.*;
+
+import java.time.LocalDate;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class CustomerRequestDTO {
+
+    private String firstName;
+    private String lastName;
+    private String mobileNumber;
+    private LocalDate dob;
+    private String email;
+    private String username;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String confirmPassword;
+}
+
+@JasonProperty(access = JasonProperty.Access.WRITE_ONLY)
+* Instead of using @JasonIgnore in entity, we can use @JasonProperty in DTO
+*access.WRITE_ONLY  --> which means we can't read, we can only write
+
+Why we should not use @JasonIgnore in DTO:-
+* Controller layer converts Object to JSON
+*"Jackson" Library is responsible for it.
+* @JasonIgnore --> Ignore Always (Read and Wright)
+*Request is Mapped to DTO, not entity.
+*Entity comes after service.
+*So, we should use in Entity
+*The better way is using @Jason Property.
