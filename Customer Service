@@ -1,0 +1,67 @@
+package com.insurance.customer.service;
+
+import com.insurance.customer.dto.CustomerRequestDTO;
+import com.insurance.customer.dto.CustomerResponseDTO;
+import com.insurance.customer.entity.Customer;
+import com.insurance.customer.repository.CustomerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CustomerService {
+
+    @Autowired
+    private CustomerRepository repository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public CustomerResponseDTO registerUser(CustomerRequestDTO dto) {
+
+        // 🔐 1. Password validation
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+            throw new RuntimeException("Passwords do not match");
+        }
+
+        // 🔍 2. Duplicate checks
+        if (repository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        if (repository.findByUsername(dto.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        if (repository.existsByMobileNumber(dto.getMobileNumber())) {
+            throw new RuntimeException("Mobile number already exists");
+        }
+
+        // 🔄 3. DTO → Entity
+        Customer customer = new Customer();
+        customer.setFirstName(dto.getFirstName());
+        customer.setLastName(dto.getLastName());
+        customer.setMobileNumber(dto.getMobileNumber());
+        customer.setDob(dto.getDob());
+        customer.setEmail(dto.getEmail());
+        customer.setUsername(dto.getUsername());
+
+        // 🔐 Encrypt password
+        customer.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+        // 💾 4. Save to DB
+        Customer saved = repository.save(customer);
+
+        // 🔄 5. Entity → Response DTO
+        CustomerResponseDTO response = new CustomerResponseDTO();
+        response.setId(saved.getId());
+        response.setFirstName(saved.getFirstName());
+        response.setLastName(saved.getLastName());
+        response.setMobileNumber(saved.getMobileNumber());
+        response.setDob(saved.getDob());
+        response.setEmail(saved.getEmail());
+        response.setUsername(saved.getUsername());
+
+        return response;
+    }
+}
