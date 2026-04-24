@@ -14,7 +14,7 @@ public ResponseEntity<CustomerDto> registerUser(@RequestBody CustomerDto user) {
 
 //Another method
 @PostMapping("/register")
-public ResponseEntity<String> registerUser(@RequestBody CustomerDto user) {
+public ResponseEntity<CustomerDto> registerUser(@RequestBody CustomerDto user) {
 
     service.registerUser(user);
 
