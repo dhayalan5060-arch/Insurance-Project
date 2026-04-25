@@ -1,1 +1,13 @@
+package com.insurance.customer.dto;
 
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class LoginRequestDTO {
+
+    private String username;   // or email (your choice)
+    private String password;
+}
