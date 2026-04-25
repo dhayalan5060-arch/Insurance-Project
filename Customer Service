@@ -37,6 +37,30 @@ public class CustomerService {
             throw new RuntimeException("Mobile number already exists");
         }
 
+//Login
+public LoginResponseDTO login(LoginRequestDTO dto) {
+
+        // 🔍 1. Fetch user from DB
+        Customer customer = repository.findByUsername(dto.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 🔐 2. Validate password (IMPORTANT)
+        if (!passwordEncoder.matches(dto.getPassword(), customer.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        // 🎟️ 3. (Optional for now) Generate JWT later
+        String token = "dummy-token"; // replace with real JWT
+
+        // 📦 4. Prepare response
+        return LoginResponseDTO.builder()
+                .username(customer.getUsername())
+                .token(token)
+                .message("Login successful")
+                .build();
+    }
+
+
         // 🔄 3. DTO → Entity
         Customer customer = new Customer();
         customer.setFirstName(dto.getFirstName());
