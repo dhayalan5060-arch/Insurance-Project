@@ -12,6 +12,14 @@ public ResponseEntity<CustomerDto> registerUser(@RequestBody CustomerDto user) {
     return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 }
 
+@PostMapping("/login")
+public ResponseEntity<LoginResponseDTO> loginUser(@RequestBody LoginRequestDTO dto) {  // This API is for Login, We have a separate DTO for it.
+
+    LoginResponseDTO response = service.login(dto);
+
+    return ResponseEntity.ok(response);
+}
+
 
 //Another method
 @PostMapping("/register")
