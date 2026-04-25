@@ -12,6 +12,7 @@ public ResponseEntity<CustomerDto> registerUser(@RequestBody CustomerDto user) {
     return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 }
 
+
 //Another method
 @PostMapping("/register")
 public ResponseEntity<CustomerDto> registerUser(@RequestBody CustomerDto user) {
