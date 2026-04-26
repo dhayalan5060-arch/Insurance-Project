@@ -1,0 +1,57 @@
+package com.insurance.policy.service;
+
+import com.insurance.policy.client.CustomerClient;
+import com.insurance.policy.dto.*;
+import com.insurance.policy.entity.*;
+import com.insurance.policy.factory.PolicyFactory;
+import com.insurance.policy.repository.PolicyRepository;
+import com.insurance.policy.service.processor.PolicyProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class PolicyService {
+
+    @Autowired
+    private PolicyRepository repository;
+
+    @Autowired
+    private PolicyFactory factory;
+
+    @Autowired
+    private CustomerClient customerClient;
+
+    public PolicyResponseDTO createPolicy(PolicyRequestDTO dto) {
+
+        // 🔗 Feign call
+        CustomerDTO customer = customerClient.getCustomerById(dto.getCustomerId());
+
+        // 📦 DTO → Entity
+        Policy policy = new Policy();
+        policy.setCustomerId(dto.getCustomerId());
+        policy.setPolicyType(PolicyType.valueOf(dto.getPolicyType()));
+        policy.setCategory(PolicyCategory.valueOf(dto.getCategory()));
+        policy.setTenureInMonths(dto.getTenureInMonths());
+
+        // 🔥 Business logic
+        PolicyProcessor processor =
+                factory.getProcessor(policy.getPolicyType());
+
+        processor.process(policy, dto);
+
+        // 💾 Save
+        Policy saved = repository.save(policy);
+
+        // 📤 Response
+        return PolicyResponseDTO.builder()
+                .policyId(saved.getId())
+                .customerId(saved.getCustomerId())
+                .policyType(saved.getPolicyType().name())
+                .category(saved.getCategory().name())
+                .premiumAmount(saved.getPremiumAmount())
+                .tenureInMonths(saved.getTenureInMonths())
+                .customerName(customer.getFirstName() + " " + customer.getLastName())
+                .customerEmail(customer.getEmail())
+                .build();
+    }
+}
