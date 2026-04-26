@@ -20,11 +20,11 @@ public class Policy {
 
     private String policyNumber;
 
-    @Enumerated(EnumType.STRING)
-    private PolicyType policyType;
-
-    @Enumerated(EnumType.STRING)
-    private PolicyCategory category;
+    @Enumerated(EnumType.STRING)         // This Annotation tells How Enums will be stored in the database.
+    private PolicyType policyType;       // @Enumerated(EnumType.ORDINAL), it will store as a number.
+                                         // MOTOR --> 0
+    @Enumerated(EnumType.STRING)         // HEALTH  --> 1  
+    private PolicyCategory category;     // COMMERCIAL  --> 2
 
     private Double premiumAmount;
 
