@@ -1,0 +1,15 @@
+package com.insurance.policy.dto;
+
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class PolicyRequestDTO {
+
+    private Long customerId;
+    private String policyType;   // MOTOR / HEALTH / COMMERCIAL
+    private String category;     // TWO_WHEELER / FOUR_WHEELER
+    private Integer tenureInMonths;
+}
